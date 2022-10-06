@@ -6,3 +6,7 @@ compatibility_date = "2022-10-03"
 binding = "CONFIG_KV"
 id = "00000000000000000000000000000000"
 preview_id = "00000000000000000000000000000000"
+
+[vars]
+# required secrets:
+# ACCESS_KEY - access key to update config
