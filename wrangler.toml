@@ -1,0 +1,24 @@
+name = "launcher-config-dev"
+main = "src/index.ts"
+compatibility_date = "2022-10-03"
+account_id = "5e015123d861c65819b733acb27db18e"
+
+[[kv_namespaces]]
+binding = "CONFIG_KV"
+id = "32de18dfe062427eb7f6d04c13ca3fad"
+preview_id = "840e6317ccb8458080ace78b8dc72164"
+
+[env.prod]
+name = "launcher-config-prod"
+kv_namespaces = [
+  { binding = "CONFIG_KV", id = "dbaafdb83cce4410a0e6a9cda7676eaf" }
+]
+workers_dev = false
+
+[env.prod.route]
+pattern = "launcher-config.beyondallreason.dev"
+custom_domain = true
+zone_name = "beyondallreason.dev"
+
+# required secrets:
+# ACCESS_KEY - access key to update config

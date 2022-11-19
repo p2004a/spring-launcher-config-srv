@@ -3,10 +3,13 @@ export interface Env {
     ACCESS_KEY: string;
 }
 
-function isNewConfigCorrect(oldConfig: string, newConfig: string): [boolean, string] {
-    const o = JSON.parse(oldConfig);
+function isNewConfigCorrect(oldConfig: string | null, newConfig: string): [boolean, string] {
     try {
         const n = JSON.parse(newConfig);
+        if (oldConfig === null) {
+            return [true, ""];
+        }
+        const o = JSON.parse(oldConfig);
         // TODO: do something more advanced
         return [true, ""];
     } catch (error) {
@@ -33,13 +36,10 @@ export default {
         }
 
         const config = await env.CONFIG_KV.get("config.json");
-        if (config === null) {
-            return new Response("config.json not set", {status: 404});
-        }
-
         if (request.method === 'PUT') {
             const accessKey = request.headers.get('AccessKey');
             if (accessKey == null ||
+                env.ACCESS_KEY.length != accessKey.length ||
                 !crypto.subtle.timingSafeEqual(new TextEncoder().encode(env.ACCESS_KEY),
                                                new TextEncoder().encode(accessKey))
             ) {
@@ -53,6 +53,9 @@ export default {
             await env.CONFIG_KV.put("config.json", newConfig);
             return new Response("Ok", {status: 200});
         } else {
+            if (config === null) {
+                return new Response("config.json not set", {status: 404});
+            }
             return new Response(config, {
                 status: 200,
                 headers: new Headers({'Content-Type': 'application/json'})
